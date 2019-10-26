@@ -1,0 +1,207 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "college agenda",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "hello",
+                        "how are you",
+                        "say hi world",
+                        "say hi",
+                        "hi",
+                        "say hello world",
+                        "say hello"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "ClassListIntent",
+                    "slots": [],
+                    "samples": [
+                        "what classes am I taking now",
+                        "what classes am I taking",
+                        "what courses am I taking",
+                        "what courses am I taking now",
+                        "what are my classes",
+                        "what are my courses",
+                        "classes list",
+                        "courses list",
+                        "what am I studying this semester",
+                        "what are my classes looking like",
+                        "what are my courses looking like",
+                        "list my classes",
+                        "list my courses"
+                    ]
+                },
+                {
+                    "name": "OfficeHourTime",
+                    "slots": [
+                        {
+                            "name": "OfficeHourClass",
+                            "type": "Classes"
+                        }
+                    ],
+                    "samples": [
+                        "what time are office hours",
+                        "give me the office hour schedule",
+                        "office hours times",
+                        "when are the next office hours",
+                        "when are office hours"
+                    ]
+                },
+                {
+                    "name": "NotificationsIntent",
+                    "slots": [],
+                    "samples": [
+                        "register my notifications",
+                        "send me notifications",
+                        "sign me up for notifications"
+                    ]
+                },
+                {
+                    "name": "AssignmentIntent",
+                    "slots": [
+                        {
+                            "name": "AssignmentClass",
+                            "type": "Classes",
+                            "samples": [
+                                "English"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "what is my homework called",
+                        "what is my next homework",
+                        "what is my assignment called",
+                        "what is my next assignment called",
+                        "what is my next assignment"
+                    ]
+                },
+                {
+                    "name": "UserIntent",
+                    "slots": [],
+                    "samples": [
+                        "who am I",
+                        "what is my user",
+                        "what is my username",
+                        "what is my account name",
+                        "what is my name"
+                    ]
+                },
+                {
+                    "name": "GradesIntent",
+                    "slots": [],
+                    "samples": [
+                        "how many points did I get",
+                        "how many points did I receive",
+                        "what grade did I get",
+                        "show me my grades",
+                        "what are my grades "
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Classes",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "computer science",
+                                "synonyms": [
+                                    "CS"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "biology",
+                                "synonyms": [
+                                    "Bio"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "mathematics",
+                                "synonyms": [
+                                    "Math"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "chemistry",
+                                "synonyms": [
+                                    "Chem"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "english"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "physics",
+                                "synonyms": [
+                                    "Phys"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "AssignmentIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "AssignmentClass",
+                            "type": "Classes",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.396078264947.756784625919"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.396078264947.756784625919",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "In which class do you want to look up your assignments?"
+                    }
+                ]
+            }
+        ]
+    }
+}
