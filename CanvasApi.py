@@ -107,8 +107,8 @@ class CanvasApi(object):
         assignments = CanvasDataSource.getAssignments(self.USER_ID, course_id)
 
         if after_date is None:
-            return sorted([(a['name'], self.get_date(a['created_at'])) for a in assignments if
-                           a['submission_types'][0] == 'online_upload' and self.get_date(a['created_at']) > datetime.now()],
+            return sorted([(a['name'], self.get_date(a['due_at'])) for a in assignments if
+                           a['submission_types'][0] == 'online_upload' and self.get_date(a['due_at']) > datetime.now()],
                           key=lambda x: x[1])
         else:
             return sorted([(a['name'], self.get_date(a['created_at'])) for a in assignments if
@@ -167,8 +167,8 @@ class CanvasApi(object):
 
         if after_date is None:
             return sorted(
-                [(q['title'], self.get_date(q['unlock_at'])) for q in quizzes if
-                 self.get_date(q['unlock_at']) > datetime.now()],
+                [(q['title'], self.get_date(q['due_at'])) for q in quizzes if
+                 self.get_date(q['due_at']) > datetime.now()],
                 key=lambda x: x[1])
         else:
             return sorted([(q['title'], self.get_date(q['unlock_at'])) for q in quizzes if
