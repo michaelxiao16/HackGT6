@@ -40,13 +40,13 @@ class CanvasApi:
         return f'You are currently enrolled in {text}'
 
     def get_my_name(self):
-        return f"Your name is: {list(self.courses.values())[0]['user']['name']}"
+        return {list(self.courses.values())[0]['user']['name']}
 
     def get_grade(self, course_name: str):
         if course_name not in self.course_name_to_id:
             return f'Course name {course_name} could not be found'
         course_id = self.course_name_to_id[course_name]
         course = self.courses[course_id]
-        return f"You have a {course['grades']['current_grade']} in {course_name}"
+        return course['grades']['current_grade']
 
 
