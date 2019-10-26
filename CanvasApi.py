@@ -59,6 +59,9 @@ class CanvasApi:
 
         assignments = sorted([(a['name'], self.get_date(a['due_at'])) for a in assignments if a['submission_types'][0] == 'online_upload' and self.get_date(a['due_at']) > datetime.now()] , key= lambda x: x[1])
 
+        if len(assignments) == 0:
+            return f'You have no assignments in {course_name}'
+
         latest = f'{assignments[0][0]} is due {assignments[0][1].strftime("%B %d, %Y")}'
         return f'You have {len(assignments)} assignments in {course_name}. {latest}'
 
