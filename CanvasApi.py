@@ -223,3 +223,11 @@ class CanvasApi(object):
     @command(description="Get the all the announcements for each course for the current student.")
     def get_all_announcements(self):
         return [(name, self.get_announcement_raw(name)) for name in self.all_unique_course_names]
+
+    @parameter(key="date", description="Show announcements after this date",
+               display_name="After Date", type='DateTime')
+    @command(description="Get the current students announcements past a date")
+    def get_all_new_announcements(self, date):
+        if type(date) == int:
+            date = datetime.utcfromtimestamp(date / 1000)
+        return [(name, self.get_announcement_raw(name, after_date=date)) for name in self.all_unique_course_names]
