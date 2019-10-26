@@ -48,7 +48,7 @@ class CanvasApi:
             return f'Course name {course_name} could not be found'
         course_id = self.course_name_to_id[course_name]
         course = self.courses[course_id]
-        return f"You have a {course['grades']['current_grade']} in {course_name}"
+        return f"You have a {course['grades']['current_score']} in {course_name}"
     
     def get_assignments(self, course_name: str):
         course_name = course_name.lower()
