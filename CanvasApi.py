@@ -130,7 +130,7 @@ class CanvasApi(object):
     def get_date(self, string):
         if string is None:
             return datetime.now()
-        return datetime.strptime(string.split('T')[0], '%Y-%m-%d')
+        return datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
 
     @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
                display_name="Course Name",
