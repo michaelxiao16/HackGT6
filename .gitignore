@@ -1,3 +1,6 @@
 *.xml
 /.idea
+.idea
+venv
+aws-creds.json
 __pycache__/
