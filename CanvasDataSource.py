@@ -20,8 +20,8 @@ def getAssignments(user_id: int, course_id: int):
 def getQuizzes(course_id: int):
     return requests.get(f"https://canvas.instructure.com/api/v1/courses/{course_id}/quizzes").json()
 
-def getAnnouncements(course)
-
+def getAnnouncement(course_id: int):
+    return requests.get(f"https://canvas.instructure.com/api/v1/courses/{course_id}/discussion_topics?only_announcements=true&access_token={ACCESS_TOKEN}").json()
 
 
 
