@@ -7,8 +7,16 @@ class CanvasApi:
         self.USER_ID = 24939504
         self.course_json = CanvasDataSource.getClasses()
         self.course_id_to_name = {course['id']: course['name'] for course in self.course_json}
-        self.course_name_to_id = {course['name']: course['id']  for course in self.course_json}
+        self.course_name_to_id = self.get_course_names_to_ids()
         self.courses = self.get_courses()
+
+    def get_course_names_to_ids(self):
+        base = {}
+        for course in self.course_json:
+            base[course['name']] = course['id']
+            base[course['name'].split()[0]] = course['id']
+            base[course['name'].replace(' ', '')] = course['id']
+        return base
 
     def get_courses(self):
         courses = {}
@@ -39,5 +47,6 @@ class CanvasApi:
             return f'Course name {course_name} could not be found'
         course_id = self.course_name_to_id[course_name]
         course = self.courses[course_id]
-        return course['grades']['current_grade']
+        return f"You have a {course['grades']['current_grade']} in {course_name}"
+
 
