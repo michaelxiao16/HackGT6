@@ -13,9 +13,9 @@ class CanvasApi:
     def get_course_names_to_ids(self):
         base = {}
         for course in self.course_json:
-            base[course['name']] = course['id']
-            base[course['name'].split()[0]] = course['id']
-            base[course['name'].replace(' ', '')] = course['id']
+            base[course['name'].lower()] = course['id']
+            base[course['name'].split()[0].lower()] = course['id']
+            base[course['name'].replace(' ', '').lower()] = course['id']
         return base
 
     def get_courses(self):
@@ -43,6 +43,7 @@ class CanvasApi:
         return str(list(self.courses.values())[0]['user']['name'])
 
     def get_grade(self, course_name: str):
+        course_name = course_name.lower()
         if course_name not in self.course_name_to_id:
             return f'Course name {course_name} could not be found'
         course_id = self.course_name_to_id[course_name]
@@ -50,6 +51,7 @@ class CanvasApi:
         return f"You have a {course['grades']['current_grade']} in {course_name}"
     
     def get_assignments(self, course_name: str):
+        course_name = course_name.lower()
         if course_name not in self.course_name_to_id:
             return f'Course name {course_name} could not be found'
         course_id = self.course_name_to_id[course_name]
@@ -66,6 +68,7 @@ class CanvasApi:
         return datetime.strptime(string.split('T')[0], '%Y-%m-%d')
 
     def get_quizzes(self, course_name: str):
+        course_name = course_name.lower()
         if course_name not in self.course_name_to_id:
             return f'Course name {course_name} could not be found'
         course_id = self.course_name_to_id[course_name]
