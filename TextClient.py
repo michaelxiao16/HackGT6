@@ -8,7 +8,7 @@ def send_message():
     "destinationNumber": "4702637816",
     "firstName": "Austin",
     "lastName": "Miles",
-    "source": "Subscribe?"
+    "source": "hi"
     }"""
     client = get_boto3_client()
     client.invoke(
