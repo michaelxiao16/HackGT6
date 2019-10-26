@@ -11,8 +11,8 @@ def get_enrollment(course_id: int):
     return requests.get(f'https://canvas.instructure.com/api/v1/courses/{course_id}/enrollments?access_token={ACCESS_TOKEN}').json()
 
 def getAssignments(user_id: int, course_id: int):
-    return requests.get(f"https://canvas.instructure.com/api/v1/users/{user_id}/courses/{course_id}/assignments").json()
+    return requests.get(f"https://canvas.instructure.com/api/v1/users/{user_id}/courses/{course_id}/assignments?access_token={ACCESS_TOKEN}").json()
 
 def getQuizzes(course_id: int):
-    return requests.get(f"https://canvas.instructure.com/api/v1/courses/{course_id}/quizzes").json()
+    return requests.get(f"https://canvas.instructure.com/api/v1/courses/{course_id}/quizzes?access_token={ACCESS_TOKEN}").json()
 

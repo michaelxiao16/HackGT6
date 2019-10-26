@@ -1,5 +1,5 @@
 import CanvasDataSource
-
+from datetime import datetime
 
 class CanvasApi:
 
@@ -40,13 +40,41 @@ class CanvasApi:
         return f'You are currently enrolled in {text}'
 
     def get_my_name(self):
-        return {list(self.courses.values())[0]['user']['name']}
+        return str(list(self.courses.values())[0]['user']['name'])
 
     def get_grade(self, course_name: str):
         if course_name not in self.course_name_to_id:
             return f'Course name {course_name} could not be found'
         course_id = self.course_name_to_id[course_name]
         course = self.courses[course_id]
-        return course['grades']['current_grade']
+        return f"You have a {course['grades']['current_grade']} in {course_name}"
+    
+    def get_assignments(self, course_name: str):
+        if course_name not in self.course_name_to_id:
+            return f'Course name {course_name} could not be found'
+        course_id = self.course_name_to_id[course_name]
+        assignments = CanvasDataSource.getAssignments(self.USER_ID, course_id)
+
+        assignments = sorted([(a['name'], self.get_date(a['due_at'])) for a in assignments if a['submission_types'][0] == 'online_upload'], key= lambda x: x[1])
+
+        latest = f'{assignments[0][0]} is due {assignments[0][1].strftime("%B %d, %Y")}'
+        return f'You have {len(assignments)} assignments in {course_name}. {latest}'
+
+    def get_date(self, string):
+        if string is None:
+            return datetime.now()
+        return datetime.strptime(string.split('T')[0], '%Y-%m-%d')
+
+    def get_quizzes(self, course_name: str):
+        if course_name not in self.course_name_to_id:
+            return f'Course name {course_name} could not be found'
+        course_id = self.course_name_to_id[course_name]
+        quizzes = CanvasDataSource.getQuizzes(course_id)
+
+        quizzes = sorted([(q['title'], self.get_date(q['due_at'])) for q in quizzes], key= lambda x: x[1])
+
+        latest = f'{quizzes[0][0]} is due {quizzes[0][1].strftime("%B %d, %Y")}'
+        quiz = 'quiz' if len(quizzes) == 1 else 'quizzes'
+        return f'You have {len(quizzes)} {quiz} in {course_name}. {latest}'
 
 
