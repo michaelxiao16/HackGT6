@@ -19,10 +19,20 @@ class CanvasApi:
         return courses
 
     def get_course_names(self):
-        return [self.course_id_to_name[course_id] for course_id in self.courses]
+        courses_names = [self.course_id_to_name[course_id] for course_id in self.courses]
+        text = ""
+        if len(courses_names) == 2:
+            text = f'{courses_names[0]} and {courses_names[1]}'
+        else:
+            for index, name  in enumerate(courses_names):
+                if index < (len(courses_names) - 1):
+                    text += f'{name}, '
+                else:
+                    text += f'and {name}.'
+        return f'You are currently enrolled in: {text}'
 
     def get_my_name(self):
-        return list(self.courses.values())[0]['user']['name']
+        return f"Your name is: {list(self.courses.values())[0]['user']['name']}"
 
     def get_grade(self, course_name: str):
         if course_name not in self.course_name_to_id:
