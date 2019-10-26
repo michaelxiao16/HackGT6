@@ -9,14 +9,19 @@ import CanvasApi
 async def report_result(delay):
     await asyncio.sleep(delay)
     c = CanvasApi.CanvasApi()
-    data = c.get_all_grades()
-    print(str(data))
+    grade_data = c.get_all_grades()
+    print(str(grade_data))
     with open('student_data.json') as f:
         student = json.load(f)
-        for cl, grade in data:
+        last_date = datetime.datetime.fromisoformat(student['last_check'])
+        announcements_tuples = c.get_all_new_announcements(last_date)
+        for course, announcements in announcements_tuples:
+            if len(announcements) != 0:
+                TextClient.send_announcement_message()
+        for cl, grade in grade_data:
             if student["current_grades"][cl] != grade:
                 student["current_grades"][cl] = grade
-                TextClient.send_message()
+                TextClient.send_grade_change_message()
         student['last_check'] = str(datetime.datetime.now())
         with open('student_data.json', 'w') as w:
             json.dump(student, w)
