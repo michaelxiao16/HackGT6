@@ -55,7 +55,7 @@ class CanvasApi:
         course_id = self.course_name_to_id[course_name]
         assignments = CanvasDataSource.getAssignments(self.USER_ID, course_id)
 
-        assignments = sorted([(a['name'], self.get_date(a['due_at'])) for a in assignments if a['submission_types'][0] == 'online_upload'], key= lambda x: x[1])
+        assignments = sorted([(a['name'], self.get_date(a['due_at'])) for a in assignments if a['submission_types'][0] == 'online_upload' and self.get_date(a['due_at']) > datetime.now()] , key= lambda x: x[1])
 
         latest = f'{assignments[0][0]} is due {assignments[0][1].strftime("%B %d, %Y")}'
         return f'You have {len(assignments)} assignments in {course_name}. {latest}'
@@ -71,7 +71,7 @@ class CanvasApi:
         course_id = self.course_name_to_id[course_name]
         quizzes = CanvasDataSource.getQuizzes(course_id)
 
-        quizzes = sorted([(q['title'], self.get_date(q['due_at'])) for q in quizzes], key= lambda x: x[1])
+        quizzes = sorted([(q['title'], self.get_date(q['due_at'])) for q in quizzes if self.get_date(q['due_at']) > datetime.now()], key= lambda x: x[1])
 
         latest = f'{quizzes[0][0]} is due {quizzes[0][1].strftime("%B %d, %Y")}'
         quiz = 'quiz' if len(quizzes) == 1 else 'quizzes'
