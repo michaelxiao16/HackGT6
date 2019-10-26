@@ -49,7 +49,8 @@ class CanvasApi(object):
     def get_my_name(self):
         return str(list(self.courses.values())[0]['user']['name'])
 
-    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)", display_name="Course Name", default="English 1101")
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
+               display_name="Course Name", default="English 1101")
     @command(description="Get the current students grade for a specific course.", output_type='STRING')
     def get_grade(self, course_name: str):
         course_name = course_name.lower()
@@ -59,7 +60,8 @@ class CanvasApi(object):
         course = self.courses[course_id]
         return f"You have a {course['grades']['current_score']} in {course_name}"
 
-    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)", display_name="Course Name",
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
+               display_name="Course Name",
                default="English 1101")
     @command(description="Get the current students grade for a specific course.")
     def get_grade_raw(self, course_name: str):
@@ -71,7 +73,8 @@ class CanvasApi(object):
     def get_all_grades(self):
         return [(name, self.get_grade_raw(name)) for name in self.all_unique_course_names]
 
-    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)", display_name="Course Name",
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
+               display_name="Course Name",
                default="English 1101")
     @command(description="Get the all the assignments of a course for the current student.")
     def get_assignments(self, course_name: str):
@@ -115,7 +118,6 @@ class CanvasApi(object):
     @command(description="Get the all the assignments for the current student.")
     def get_all_assignments(self):
         return [(name, self.get_assignments_raw(name)) for name in self.all_unique_course_names]
-
 
     @parameter(key="date", description="Show assignments after this date",
                display_name="After Date", type='DateTime')
@@ -182,3 +184,42 @@ class CanvasApi(object):
         if type(date) == int:
             date = datetime.utcfromtimestamp(date / 1000)
         return [(name, self.get_quizzes_raw(name, after_date=date)) for name in self.all_unique_course_names]
+
+    def get_announcement(self, course_name, after_date: datetime = None):
+        if type(after_date) == int:
+            after_date = datetime.utcfromtimestamp(after_date / 1000)
+        course_name = course_name.lower()
+        if course_name not in self.course_name_to_id:
+            return f'Course name {course_name} could not be found'
+        course_id = self.course_name_to_id[course_name]
+        announcements = CanvasDataSource.getAnnouncement(course_id)
+        if after_date is None:
+            info =  sorted(
+                [(a['title'], self.get_date(a['posted_at'])) for a in announcements],
+                key=lambda x: x[1])
+        else:
+            info = sorted([(a['title'], self.get_date(a['posted_at'])) for a in announcements if
+                           self.get_date(a['posted_at']) > after_date],
+                          key=lambda x: x[1])
+        if len(info) == 0:
+            return f'There are no announcements for {course_name}'
+        return f'The latest announcement for {course_name} is {info[0]}'
+
+    def get_announcement_raw(self, course_name, after_date: datetime = None):
+        if type(after_date) == int:
+            after_date = datetime.utcfromtimestamp(after_date / 1000)
+        course_name = course_name.lower()
+        course_id = self.course_name_to_id[course_name]
+        announcements = CanvasDataSource.getAnnouncement(course_id)
+        if after_date is None:
+            return sorted(
+                [(a['title'], self.get_date(a['posted_at'])) for a in announcements],
+                key=lambda x: x[1])
+        else:
+            return sorted([(a['title'], self.get_date(a['posted_at'])) for a in announcements if
+                           self.get_date(a['posted_at']) > after_date],
+                          key=lambda x: x[1])
+
+    @command(description="Get the all the announcements for each course for the current student.")
+    def get_all_announcements(self):
+        return [(name, self.get_announcement_raw(name)) for name in self.all_unique_course_names]
