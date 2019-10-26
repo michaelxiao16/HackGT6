@@ -130,7 +130,9 @@ class CanvasApi(object):
     def get_date(self, string):
         if string is None:
             return datetime.now()
-        return datetime.strptime(string, '%Y-%m-%dT%H:%M:%SZ')
+        newHour = int(string.split('T')[1][:2]) - 4 % 24
+        newString = string.split('T')[0] + 'T' + str(newHour) + string.split('T')[1][2:]
+        return datetime.strptime(newString, '%Y-%m-%dT%H:%M:%SZ')
 
     @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
                display_name="Course Name",
@@ -203,7 +205,6 @@ class CanvasApi(object):
             return f'There are no announcements for {course_name}'
         return f'The latest announcement for {course_name} is {info[0]}'
 
-
     @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
                display_name="Course Name",
                default="English 1101")
@@ -225,16 +226,14 @@ class CanvasApi(object):
                            self.get_date(a['posted_at']) > after_date],
                           key=lambda x: x[1])
 
-
     @command(description="Get the all the announcements for each course for the current student.")
     def get_all_announcements(self):
         return [(name, self.get_announcement_raw(name)) for name in self.all_unique_course_names]
 
-
-@parameter(key="date", description="Show announcements after this date",
-           display_name="After Date", type='DateTime')
-@command(description="Get the current students announcements past a date")
-def get_all_new_announcements(self, date):
-    if type(date) == int:
-        date = datetime.utcfromtimestamp(date / 1000)
-    return [(name, self.get_announcement_raw(name, after_date=date)) for name in self.all_unique_course_names]
+    @parameter(key="date", description="Show announcements after this date",
+               display_name="After Date", type='DateTime')
+    @command(description="Get the current students announcements past a date")
+    def get_all_new_announcements(self, date):
+        if type(date) == int:
+            date = datetime.utcfromtimestamp(date / 1000)
+        return [(name, self.get_announcement_raw(name, after_date=date)) for name in self.all_unique_course_names]
