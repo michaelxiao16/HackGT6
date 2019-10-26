@@ -22,14 +22,14 @@ class CanvasApi:
         courses_names = [self.course_id_to_name[course_id] for course_id in self.courses]
         text = ""
         if len(courses_names) == 2:
-            text = f'{courses_names[0]} and {courses_names[1]}'
+            text = f'{courses_names[0]} and {courses_names[1]}.'
         else:
             for index, name  in enumerate(courses_names):
                 if index < (len(courses_names) - 1):
                     text += f'{name}, '
                 else:
                     text += f'and {name}.'
-        return f'You are currently enrolled in: {text}'
+        return f'You are currently enrolled in {text}'
 
     def get_my_name(self):
         return f"Your name is: {list(self.courses.values())[0]['user']['name']}"
