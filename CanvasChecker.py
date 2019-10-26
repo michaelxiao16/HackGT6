@@ -18,6 +18,14 @@ async def report_result(delay):
         for course, announcements in announcements_tuples:
             if len(announcements) != 0:
                 TextClient.send_announcement_message()
+        assignment_tuples = c.get_all_new_assignments(last_date)
+        for course, assignments in assignment_tuples:
+            if len(assignments) != 0:
+                TextClient.send_assignment_message()
+        quiz_tuples = c.get_all_new_quizzes(last_date)
+        for course, quizzes in quiz_tuples:
+            if len(quizzes) != 0:
+                TextClient.send_quiz_message()
         for cl, grade in grade_data:
             if student["current_grades"][cl] != grade:
                 student["current_grades"][cl] = grade
