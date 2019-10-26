@@ -1,8 +1,10 @@
 import CanvasDataSource
 from datetime import datetime
+from brewtils import system, parameter, Plugin, command
 
 
-class CanvasApi:
+@system
+class CanvasApi(object):
 
     def __init__(self):
         self.USER_ID = 24939504
@@ -20,6 +22,7 @@ class CanvasApi:
             base[course['name'].replace(' ', '').lower()] = course['id']
         return base
 
+    @command(description='Get all the courses as a json file of the current student.', output_type='JSON')
     def get_courses(self):
         courses = {}
         for course_id in self.course_id_to_name:
@@ -28,6 +31,7 @@ class CanvasApi:
                     courses[course_id] = enrolled
         return courses
 
+    @command(description='Get all the courses of the current student.')
     def get_course_names(self):
         courses_names = [self.course_id_to_name[course_id] for course_id in self.courses]
         text = ""
@@ -41,9 +45,12 @@ class CanvasApi:
                     text += f'and {name}.'
         return f'You are currently enrolled in {text}'
 
+    @command(description='Get the name of the current student.', output_type='STRING')
     def get_my_name(self):
         return str(list(self.courses.values())[0]['user']['name'])
 
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)", display_name="Course Name", default="English 1101")
+    @command(description="Get the current students grade for a specific course.", output_type='STRING')
     def get_grade(self, course_name: str):
         course_name = course_name.lower()
         if course_name not in self.course_name_to_id:
@@ -52,14 +59,21 @@ class CanvasApi:
         course = self.courses[course_id]
         return f"You have a {course['grades']['current_score']} in {course_name}"
 
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)", display_name="Course Name",
+               default="English 1101")
+    @command(description="Get the current students grade for a specific course.")
     def get_grade_raw(self, course_name: str):
         course_id = self.course_name_to_id[course_name.lower()]
         course = self.courses[course_id]
         return course['grades']['current_score']
 
+    @command(description="Get the all the grades for the current student.", output_type='STRING')
     def get_all_grades(self):
         return [(name, self.get_grade_raw(name)) for name in self.all_unique_course_names]
 
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)", display_name="Course Name",
+               default="English 1101")
+    @command(description="Get the all the assignments of a course for the current student.")
     def get_assignments(self, course_name: str):
         course_name = course_name.lower()
         if course_name not in self.course_name_to_id:
@@ -77,7 +91,15 @@ class CanvasApi:
         latest = f'{assignments[0][0]} is due {assignments[0][1].strftime("%B %d, %Y")}'
         return f'You have {len(assignments)} assignments in {course_name}. {latest}'
 
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
+               display_name="Course Name",
+               default="English 1101")
+    @parameter(key="after_date", description="Show assignments after this date",
+               display_name="After Date", type='DateTime', optional=True, nullable=True)
+    @command(description="Get the current students grade for a specific course.")
     def get_assignments_raw(self, course_name: str, after_date: datetime = None):
+        if type(after_date) == int:
+            after_date = datetime.utcfromtimestamp(after_date / 1000)
         course_id = self.course_name_to_id[course_name.lower()]
         assignments = CanvasDataSource.getAssignments(self.USER_ID, course_id)
 
@@ -90,10 +112,17 @@ class CanvasApi:
                            a['submission_types'][0] == 'online_upload' and self.get_date(a['due_at']) > after_date],
                           key=lambda x: x[1])
 
+    @command(description="Get the all the assignments for the current student.")
     def get_all_assignments(self):
         return [(name, self.get_assignments_raw(name)) for name in self.all_unique_course_names]
 
+
+    @parameter(key="date", description="Show assignments after this date",
+               display_name="After Date", type='DateTime')
+    @command(description="Get the current students newest assignments.")
     def get_all_new_assignments(self, date: datetime):
+        if type(date) == int:
+            date = datetime.utcfromtimestamp(date / 1000)
         return [(name, self.get_assignments_raw(name, after_date=date)) for name in self.all_unique_course_names]
 
     def get_date(self, string):
@@ -101,6 +130,10 @@ class CanvasApi:
             return datetime.now()
         return datetime.strptime(string.split('T')[0], '%Y-%m-%d')
 
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
+               display_name="Course Name",
+               default="English 1101")
+    @command(description="Get the current students quizzes for a specific course.")
     def get_quizzes(self, course_name: str):
         course_name = course_name.lower()
         if course_name not in self.course_name_to_id:
@@ -116,7 +149,15 @@ class CanvasApi:
         quiz = 'quiz' if len(quizzes) == 1 else 'quizzes'
         return f'You have {len(quizzes)} {quiz} in {course_name}. {latest}'
 
+    @parameter(key="course_name", description="The Canvas Course Name (Example: English 1331)",
+               display_name="Course Name",
+               default="English 1101")
+    @parameter(key="after_date", description="Show assignments after this date",
+               display_name="After Date", type='DateTime', optional=True, nullable=True)
+    @command(description="Get the current students quizzes for a specific course.")
     def get_quizzes_raw(self, course_name: str, after_date: datetime = None):
+        if type(after_date) == int:
+            after_date = datetime.utcfromtimestamp(after_date / 1000)
         course_id = self.course_name_to_id[course_name.lower()]
         quizzes = CanvasDataSource.getQuizzes(course_id)
 
@@ -130,8 +171,14 @@ class CanvasApi:
                            self.get_date(q['due_at']) > after_date],
                           key=lambda x: x[1])
 
+    @command(description="Get the all the quizzes for the current student.")
     def get_all_quizzes(self):
         return [(name, self.get_quizzes_raw(name)) for name in self.all_unique_course_names]
 
-    def get_all_new_quizzes(self, date: datetime):
+    @parameter(key="date", description="Show assignments after this date",
+               display_name="After Date", type='DateTime')
+    @command(description="Get the current students quizzes past a date")
+    def get_all_new_quizzes(self, date):
+        if type(date) == int:
+            date = datetime.utcfromtimestamp(date / 1000)
         return [(name, self.get_quizzes_raw(name, after_date=date)) for name in self.all_unique_course_names]
