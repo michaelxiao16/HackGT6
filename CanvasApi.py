@@ -130,7 +130,7 @@ class CanvasApi(object):
     def get_date(self, string):
         if string is None:
             return datetime.now()
-        newHour = int(string.split('T')[1][:2]) - 4 % 24
+        newHour = (int(string.split('T')[1][:2]) - 4) % 24
         newString = string.split('T')[0] + 'T' + str(newHour) + string.split('T')[1][2:]
         return datetime.strptime(newString, '%Y-%m-%dT%H:%M:%SZ')
 
