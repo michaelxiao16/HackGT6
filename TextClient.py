@@ -2,13 +2,62 @@ import json
 
 import boto3 as boto3
 
+DESTINATION_NUMBER = "4702637816"
+FIRST_NAME = "Austin"
+LAST_NAME = "Miles"
 
-def send_message():
+
+def send_grade_change_message():
     payload3 = b"""{
     "destinationNumber": "4702637816",
     "firstName": "Austin",
     "lastName": "Miles",
-    "source": "Subscribe?"
+    "source": "Grade Change"
+    }"""
+    client = get_boto3_client()
+    client.invoke(
+        FunctionName="CanvasText",
+        InvocationType="Event",
+        Payload=payload3
+    )
+
+
+def send_announcement_message():
+    payload3 = b"""{
+    "destinationNumber": "4702637816",
+    "firstName": "Austin",
+    "lastName": "Miles",
+    "source": "New Announcement"
+    }"""
+    client = get_boto3_client()
+    client.invoke(
+        FunctionName="CanvasText",
+        InvocationType="Event",
+        Payload=payload3
+    )
+
+
+def send_quiz_message():
+    payload3 = b"""{
+    "destinationNumber": "4702637816",
+    "firstName": "Austin",
+    "lastName": "Miles",
+    "source": "New Quiz"
+    }"""
+    client = get_boto3_client()
+    client.invoke(
+        FunctionName="CanvasText",
+        InvocationType="Event",
+        Payload=payload3
+    )
+
+
+def send_assignment_message():
+    payload3 = b"""{
+    "destinationNumber": "4702637816",
+    "firstName": "Austin",
+    "lastName": "Miles",
+    "source": "New Assignment"
     }"""
     client = get_boto3_client()
     client.invoke(
@@ -33,4 +82,4 @@ def get_boto3_client():
 
 
 if __name__ == '__main__':
-    send_message()
+    send_grade_change_message()

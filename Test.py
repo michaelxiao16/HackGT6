@@ -1,6 +1,5 @@
-from CanvasApi import CanvasApi
+import CanvasApi
 
-canvas = CanvasApi()
+canvas = CanvasApi.CanvasApi()
 
 print(canvas.get_all_assignments())
-# print(canvas.get_my_name())
