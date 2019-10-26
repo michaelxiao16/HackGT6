@@ -2,21 +2,21 @@
 
 ### An Alexa skill for use by students who use Canvas.
 
-Invoke this skill with "Ask Buzz"
+Invoke this skill with "Ask CollegeAgenda"
 
 Available commands include:
-* Ask Buzz what is my name
-* Ask Buzz what classes am I taking
-* Ask Buzz what are my grades
-* Ask Buzz what assignments do I have
-* Ask Buzz what quizzes do I have
-* Ask Buzz what is my grade in English
-* Ask Buzz what assignments do I have in Physics
+* Ask CollegeAgenda what is my name?
+* Ask CollegeAgenda what classes am I taking?
+* Ask CollegeAgenda what are my grades?
+* Ask CollegeAgenda what assignments do I have?
+* Ask CollegeAgenda what quizzes do I have?
+* Ask CollegeAgenda what is my grade in English?
+* Ask CollegeAgenda what assignments do I have in Physics?
 * And more
 
 ### Text updates
 
-Utilizes Amazon's pinpoint to send text updates on:
+Utilizes Amazon's Pinpoint to send text updates on:
 * Grade Changes
 * New Assignments
 * New Quizzes
