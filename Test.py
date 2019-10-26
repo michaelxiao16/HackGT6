@@ -2,4 +2,4 @@ import CanvasApi
 
 canvas = CanvasApi.CanvasApi()
 
-print(canvas.get_all_announcements())
+print(canvas.get_all_assignments())
