@@ -1,1 +1,28 @@
-# HackGT6
+# Canvas Assistant
+
+### An Alexa skill for use by students who use Canvas.
+
+Invoke this skill with "Ask Buzz"
+
+Available commands include:
+* Ask Buzz what is my name
+* Ask Buzz what classes am I taking
+* Ask Buzz what are my grades
+* Ask Buzz what assignments do I have
+* Ask Buzz what quizzes do I have
+* Ask Buzz what is my grade in English
+* Ask Buzz what assignments do I have in Physics
+* And more
+
+### Text updates
+
+Utilizes Amazon's pinpoint to send text updates on:
+* Grade Changes
+* New Assignments
+* New Quizzes
+
+### System Debugging
+
+Utilizies NSA's Beer-Garden to provide web hosted REST calls to quickly debug the system and see the responses
+
+This app was written by [@jaustinmiles](https://github.com/jaustinmiles), [@Ryanm14](https://github.com/Ryanm14), [@michaelxiao16](https://github.com/michaelxiao16), and [@Rmoazzami](https://github.com/Rmoazzami) during HackGT 2019.
