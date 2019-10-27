@@ -13,6 +13,9 @@ from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 from ask_sdk_core.handler_input import HandlerInput
 
+from ask_sdk_core.dispatch_components import (AbstractRequestInterceptor, AbstractResponseInterceptor)
+from ask_sdk_core.utils import is_request_type, is_intent_name
+
 from ask_sdk_model import Response
 
 from CanvasApi import CanvasApi
@@ -31,7 +34,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Welcome to Canvas! Try asking for grades, assignments, or office hours"
+        speak_output = "Welcome to Canvas! Try asking for grades, assignments, or courses"
 
         return (
             handler_input.response_builder
@@ -116,32 +119,14 @@ class AssignmentIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         
         # myh = (handler_input.requestEnvelope)
-        assignment_class = str(handler_input.requestEnvelope.request.intent.slots['AssignmentClass'].value)
-        speak_output = "Hi lmao ayyy"
-        # speak_output = "Your upcoming assignments are " + str(assignment_class)
-        # speak_output = str(canvas.get_assignments("English"))
+        assignment_class = str(handler_input.request_envelope.request.intent.slots['AssignmentClass'].value)
+        speak_output = str(canvas.get_assignments(assignment_class))
         return (
             handler_input.response_builder
                 .speak(speak_output)
                 # .ask("What class do you want to check office hours for?")
                 .response
         )
-
-# class AssignmentDueIntentHandler(AbstractRequestHandler):
-#     """Handler for AssignmentDueIntentHandler"""
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         return ask_utils.is_intent_name("AssignmentDueIntent")(handler_input)
-    
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#         speak_output = "Your next assignment is due" + get
-#         return (
-#             handler_input.response_builder
-#                 .speak(speak_output)
-#                 .ask("What class do you want to check office hours for?")
-#                 .response
-#         )
 
 class GradesIntentHandler(AbstractRequestHandler):
     """Handler for GradesIntentHandler"""
@@ -158,7 +143,42 @@ class GradesIntentHandler(AbstractRequestHandler):
                 # .ask("What class do you want to check office hours for?")
                 .response
         )
+
     
+class CourseAnnouncementIntentHandler(AbstractRequestHandler):
+    """Handler for Course Announcement Intent."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("CourseAnnouncementIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        course_announcement_class = str(handler_input.request_envelope.request.intent.slots['CourseAnnouncementClass'].value)
+        speak_output = str(canvas.get_announcement(course_announcement_class))
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
+class NewAnnouncementIntentHandler(AbstractRequestHandler):
+    """Handler for Hello World Intent."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("NewAnnouncementIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = str(canvas.get_all_announcements())
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
 class HelloWorldIntentHandler(AbstractRequestHandler):
     """Handler for Hello World Intent."""
     def can_handle(self, handler_input):
@@ -286,8 +306,9 @@ sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(ClassListIntentHandler())
 sb.add_request_handler(OfficeHourIntentHandler())
 sb.add_request_handler(AssignmentIntentHandler())
-# sb.add_request_handler(AssignmentDueIntentHandler())
 sb.add_request_handler(GradesIntentHandler())
+sb.add_request_handler(CourseAnnouncementIntentHandler())
+sb.add_request_handler(NewAnnouncementIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())

@@ -52,7 +52,7 @@
                     ]
                 },
                 {
-                    "name": "OfficeHourTime",
+                    "name": "OfficeHourIntent",
                     "slots": [
                         {
                             "name": "OfficeHourClass",
@@ -116,6 +116,36 @@
                         "show me my grades",
                         "what are my grades "
                     ]
+                },
+                {
+                    "name": "CourseAnnouncementIntent",
+                    "slots": [
+                        {
+                            "name": "CourseAnnouncementClass",
+                            "type": "Classes",
+                            "samples": [
+                                "English"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "what are my course announcements",
+                        "share canvas announcements",
+                        "are there any class announcements"
+                    ]
+                },
+                {
+                    "name": "NewAnnouncementIntent",
+                    "slots": [],
+                    "samples": [
+                        "what are my current announcements",
+                        "tell me my announcements",
+                        "let me hear some new announcements",
+                        "let me hear some updates on announcements",
+                        "update me on new course announcements",
+                        "what are some new announcements",
+                        "what are my newest announcements"
+                    ]
                 }
             ],
             "types": [
@@ -124,45 +154,56 @@
                     "values": [
                         {
                             "name": {
-                                "value": "computer science",
+                                "value": "Computer Science",
                                 "synonyms": [
+                                    "computer science",
                                     "CS"
                                 ]
                             }
                         },
                         {
                             "name": {
-                                "value": "biology",
+                                "value": "Biology",
                                 "synonyms": [
+                                    "biology",
                                     "Bio"
                                 ]
                             }
                         },
                         {
                             "name": {
-                                "value": "mathematics",
+                                "value": "Mathematics",
                                 "synonyms": [
+                                    "math",
+                                    "mathematics",
                                     "Math"
                                 ]
                             }
                         },
                         {
                             "name": {
-                                "value": "chemistry",
+                                "value": "Chemistry",
                                 "synonyms": [
+                                    "chem",
+                                    "chemistry",
                                     "Chem"
                                 ]
                             }
                         },
                         {
                             "name": {
-                                "value": "english"
+                                "value": "English",
+                                "synonyms": [
+                                    "english"
+                                ]
                             }
                         },
                         {
                             "name": {
-                                "value": "physics",
+                                "value": "Physics",
                                 "synonyms": [
+                                    "physics",
+                                    "phys",
                                     "Phys"
                                 ]
                             }
@@ -188,6 +229,22 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "CourseAnnouncementIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "CourseAnnouncementClass",
+                            "type": "Classes",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.142141378734.424451338580"
+                            }
+                        }
+                    ]
                 }
             ],
             "delegationStrategy": "ALWAYS"
@@ -199,6 +256,15 @@
                     {
                         "type": "PlainText",
                         "value": "In which class do you want to look up your assignments?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.142141378734.424451338580",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "In which courses would you like to search for announcements?"
                     }
                 ]
             }
