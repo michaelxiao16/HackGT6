@@ -144,6 +144,24 @@ class GradesIntentHandler(AbstractRequestHandler):
                 .response
         )
 
+class QuizzesIntentHandler(AbstractRequestHandler):
+    """Handler for Course Announcement Intent."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("QuizzesIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        quizzes_class = str(handler_input.request_envelope.request.intent.slots['QuizzesClass'].value)
+        speak_output = str(canvas.get_quizzes(quizzes_class))
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
+        )
+
     
 class CourseAnnouncementIntentHandler(AbstractRequestHandler):
     """Handler for Course Announcement Intent."""
@@ -307,6 +325,7 @@ sb.add_request_handler(ClassListIntentHandler())
 sb.add_request_handler(OfficeHourIntentHandler())
 sb.add_request_handler(AssignmentIntentHandler())
 sb.add_request_handler(GradesIntentHandler())
+sb.add_request_handler(QuizzesIntentHandler())
 sb.add_request_handler(CourseAnnouncementIntentHandler())
 sb.add_request_handler(NewAnnouncementIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
